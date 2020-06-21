@@ -21,4 +21,5 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/categories', 'CategoryController@getAll');
+Route::post('/add', 'ContentController@store')->name('add');
 
