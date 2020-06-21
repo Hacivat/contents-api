@@ -12,4 +12,12 @@ class Tale extends Model
      * @var string
      */
     protected $table = 'tales';
+
+    
+    /**
+     * Hidden columns.
+     *
+     * @var array
+     */
+    protected $hidden = ['id'];
 }
