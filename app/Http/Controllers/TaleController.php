@@ -8,34 +8,12 @@ use App\Tale;
 
 class TaleController extends Controller
 {
-    public function store (Request $request) {
-        $tale = new Tale();
-
-        if ($lang == 'en') {
-            $tale->text_en = $request->text;
-            $tale->title_en = $request->title;
-        }
-        else {
-            $tale->text_tr = $request->text;
-            $tale->title_tr = $request->title;
-        } 
-    
-        $tale->uuid = Str::uuid()->toString();
-        $tale->isActive = 1;
-        if ($tale->save()) 
-            return response()->json([
-                'status_code' => 200,
-                'message' => 'Created'
-            ]);
+    public function getTitles ($lang = 'tr') {
+        $tales = Tale::get();
+        if ($lang === 'en')
+            return response()->json($tales->pluck('title_en'), JSON_UNESCAPED_UNICODE );
         else 
-            return response()->json([
-                'status_code' => 400,
-                'message' => 'Failed'
-            ]);
-    }
-
-    public function getTitles () {
-        //
+            return response()->json($tales->pluck('title_tr'), JSON_UNESCAPED_UNICODE);
     }
 
     public function getContent ($lang = 'tr') {

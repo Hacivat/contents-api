@@ -5,7 +5,11 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">Dashboard</div>
+                <div class="card-header">
+                    <input type="button"value="Add Content" class="btn btn-primary"></input>
+                    <input type="button"value="Upgrade Content" class="btn btn-primary"></input>
+                    <input type="button"value="Delete Content" class="btn btn-primary"></input>
+                </div>
 
                 <div class="card-body">
                     @if (session('status'))
@@ -14,7 +18,7 @@
                         </div>
                     @endif
 
-                    <form id="insert" action="{{ action('ContentController@store') }}">
+                    <form id="insert" action="{{ route('add') }}" method="post">
                         <input name="_token" type="hidden" value="{{ csrf_token() }}"/>
                         <select class="form-control form-control-sm" name="category">
                             @foreach($categories as $value) 
@@ -39,10 +43,16 @@
                         </div>
                         <div class="form-group row">
                             <div class="col-sm-10">
-                                <button type="submit" id="submit" class="btn btn-primary">Add</button>
+                                <input type="button" id="submit" value="Add" class="btn btn-primary"></input>
                             </div>
                         </div>
                     </form>
+                    <div class="row">
+                        <div class="col-sm-10">
+                            <div id="alert-area" role="alert">
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -57,15 +67,30 @@ $( document ).ready(function() {
     $( "#submit" ).click(function( event ) {
         event.preventDefault();
 
-        $( "#insert" ).submit();
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            url:("{{ route('add') }}"),
+            type: 'POST',
+            data: $('#insert').serializeArray(),
+            success: function (response) {
+                $('#alert-area').addClass('alert alert-success')
+                $('#alert-area').html(response.message)
+            },
+            error: function (response) {
+                $('#alert-area').addClass('alert alert-danger')
+                $('#alert-area').html(response.message)
+            }
+        })
 
-        // var values = {};
-        // $.each($('#insert').serializeArray(), function(i, field) {
-        //     values[field.name] = field.value;
-        // });
-        // console.log('values', values)
-    });
-});
+        setTimeout(function(){
+            $('#alert-area').removeClass('alert alert-danger') 
+            $('#alert-area').removeClass('alert alert-success') 
+            $('#alert-area').html(''); 
+        }, 4000)
+    })
+})
 
 </script>
 
