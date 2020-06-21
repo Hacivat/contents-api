@@ -18,4 +18,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('tales/titles/{lang}', 'TaleController@getTitles');
+Route::group(['prefix' => 'tales'], function () {
+    Route::get('titles/{lang}', 'TaleController@getTitles');
+    Route::get('content/{uuid}/{lang}', 'TaleController@getContent');
+});
