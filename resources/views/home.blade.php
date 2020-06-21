@@ -6,17 +6,24 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">
-                    <input type="button"value="Add Content" class="btn btn-primary"></input>
-                    <input type="button"value="Upgrade Content" class="btn btn-primary"></input>
-                    <input type="button"value="Delete Content" class="btn btn-primary"></input>
+                    <input type="button"value="List Content" class="btn btn-secondary"></input>
+                    <input type="button"value="Add Content" class="btn btn-secondary"></input>
+                    <input type="button"value="Upgrade Content" class="btn btn-secondary"></input>
+                    <input type="button"value="Delete Content" class="btn btn-secondary"></input>
                 </div>
-
+ 
+               <!-- Add Content -->
                 <div class="card-body">
                     @if (session('status'))
                         <div class="alert alert-success" role="alert">
                             {{ session('status') }}
                         </div>
                     @endif
+                    <div class="row mb-2">
+                        <div class="col-sm-10">
+                            <b>Add Content</b>
+                        </div>
+                    </div>
 
                     <form id="insert" action="{{ route('add') }}" method="post">
                         <input name="_token" type="hidden" value="{{ csrf_token() }}"/>
