@@ -10,10 +10,17 @@ class TaleController extends Controller
 {
     public function getTitles ($lang = 'tr') {
         $tales = Tale::get();
-        if ($lang === 'en')
-            return response()->json($tales->pluck('title_en'), JSON_UNESCAPED_UNICODE);
-        else 
-            return response()->json($tales->pluck('title_tr'), JSON_UNESCAPED_UNICODE);
+
+        $data = []; $column = '';
+        if ($lang === 'en') $column = 'title_en';
+        else $column = 'title_tr';
+
+        foreach ($tales->pluck($column, 'uuid') as $key => $value) {
+            $item = ['uuid' => $key, 'title' => $value];
+            array_push($data, $item);
+        }
+
+        return response()->json(($data), JSON_UNESCAPED_UNICODE);
     }
 
     public function getTitlesAndImages ($lang = 'tr') {
