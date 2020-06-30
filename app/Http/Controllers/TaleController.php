@@ -9,12 +9,41 @@ use App\Tale;
 class TaleController extends Controller
 {
     public function getTitles ($lang = 'tr') {
-        $tales = Tale::get();
+        $tales = []; 
 
         $data = []; $column = '';
-        if ($lang === 'en') $column = 'title_en';
-        else $column = 'title_tr';
+        if ($lang === 'en') {
+            $column = 'title_en';
+        }
 
+        else {
+            $column = 'title_tr';
+        }
+
+        $tales = Tale::orderBy($column, 'asc')->get();
+
+        foreach ($tales->pluck($column, 'uuid') as $key => $value) {
+            $item = ['uuid' => $key, 'title' => $value];
+            array_push($data, $item);
+        }
+
+        return response()->json(($data), JSON_UNESCAPED_UNICODE);
+    }
+
+    public function getTitlesWithKeyword ($lang = 'tr', $keyword = '') {
+        $tales = [];
+
+        $data = []; $column = '';
+        if ($lang === 'en') {
+            $column = 'title_en';
+        }
+
+        else {
+            $column = 'title_tr';
+        }
+
+        $tales = Tale::orderBy($column, 'asc')->where($column, 'like', '%' . $keyword .'%')->get();
+        
         foreach ($tales->pluck($column, 'uuid') as $key => $value) {
             $item = ['uuid' => $key, 'title' => $value];
             array_push($data, $item);
@@ -27,7 +56,7 @@ class TaleController extends Controller
         //
     }
 
-    public function getContent ($uuid, $lang = 'tr') {
+    public function getContent ($lang = 'tr', $uuid) {
         $tale = Tale::where('uuid', $uuid)->get();
 
         if ($lang === 'en') {
